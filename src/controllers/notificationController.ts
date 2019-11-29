@@ -116,8 +116,14 @@ export class NotificationController implements Controller {
                             id: `urn:ngsi-ld:Event:${new ObjectId()}`,
                             type: EventType,
                             [labelPropName]: new Property(model.labels[p]),
-                            [windowStartPropName]: new Property(observations.observedAt[i + 11].toISOString()),
-                            [windowEndPropName]: new Property(observations.observedAt[i].toISOString()),
+                            [windowStartPropName]: new Property({
+                                [jsonLD.typeProp]: 'DateTime',
+                                [jsonLD.valueProp]: observations.observedAt[i + 11].toISOString() as unknown
+                            }),
+                            [windowEndPropName]: new Property({
+                                [jsonLD.typeProp]: 'DateTime',
+                                [jsonLD.valueProp]: observations.observedAt[i].toISOString() as unknown
+                            }),
                             [contextProp]: {}
                         };
 

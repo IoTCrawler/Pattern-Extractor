@@ -1,4 +1,5 @@
 import { Geometry } from "./geoJson";
+import * as jsonld from '../../ngsi/datatypes/jsonLD';
 
 interface BasePropertyType {
     type: 'Property' | 'Relationship' | 'GeoProperty';
@@ -8,8 +9,8 @@ interface BasePropertyType {
 export interface PropertyType<T> extends BasePropertyType {
     type: 'Property';
     value: T extends string | number ? T : {
-        type: string;
-        value: T;
+        [jsonld.typeProp]: string;
+        [jsonld.valueProp]: T;
     };
 }
 
