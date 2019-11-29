@@ -1,0 +1,40 @@
+version: '3'
+services:
+  mongo:
+    container_name: pattern-mongo
+    image: mongo
+    command: mongod --dbpath /data/db --port 27017 --bind_ip 0.0.0.0
+    restart: unless-stopped
+    expose:
+      - "27017"
+    ports:
+      - "27017:27017"
+    environment:
+      TERM: xterm
+    volumes:
+      - pattern-mongodb-data:/data/db
+  pattern-extractor-py: 
+    container_name: pattern-extractor-py
+    build:
+      context: python
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    expose:
+      - "4242"
+    ports:
+      - "4242:4242"
+  pattern-extractor: 
+    container_name: pattern-extractor
+    build:
+      context: .
+      dockerfile: pattern.Dockerfile
+    depends_on:
+      - mongo
+      - pattern-extractor-py
+    restart: unless-stopped
+    env_file:
+      - pattern.env
+    ports:
+      - "8087:8080"
+volumes:
+  pattern-mongodb-data:
